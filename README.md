@@ -80,8 +80,10 @@ Quantisation support
 Tool-use capability
 
 The correct model should be determined through benchmarking against your application's real defects rather than simply choosing the largest model.
+# 4 The architecture
+<img width="800" height="1200" alt="1791974842456" src="https://github.com/user-attachments/assets/386e696e-dc9d-4bd7-b44e-58a86612b2a8" />
 
-5. Core Components
+# 5. Core Components
 5.1 Source Code Repository
 
 The source repository remains the system of record.
