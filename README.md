@@ -47,12 +47,9 @@ This improves efficiency regardless of whether the final reasoning model is loca
 # 3. Do We Need to Train Our Own LLM?
 
 Usually, no.
-
 Training a software-engineering LLM from scratch would require significant amounts of training data, GPU infrastructure, ML expertise and model evaluation.
-
 For most enterprises, a better approach is:
 
-Plain Text
 Existing coding LLM
 +
 Repository Intelligence
@@ -129,7 +126,7 @@ Database
 
 Therefore, repository relationships are critical.
 
-6. Repository Intelligence
+# 6. Repository Intelligence
 
 A good coding agent needs more than embeddings.
 
@@ -175,7 +172,7 @@ For modern C# projects, Roslyn-based analysis is worth considering.
 
 Legacy VB.NET repositories may require a combination of compiler APIs, syntax analysis and fallback parsing depending on the project structure.
 
-7. Why AST-Aware Chunking Matters
+# 7. Why AST-Aware Chunking Matters
 
 A common RAG implementation divides documents every N characters or tokens.
 
@@ -185,7 +182,6 @@ It is less effective for source code.
 
 Consider:
 
-Plain Text
 Class
 │
 ├── Method A
@@ -200,7 +196,6 @@ The resulting embedding loses useful semantic context.
 
 A better strategy is:
 
-Plain Text
 Namespace
 ↓
 Class
@@ -226,13 +221,12 @@ This makes retrieval much more useful.
 
 An internal architecture example, AI-AugmentedSDLC, similarly describes AST/regex parsing, embeddings, hybrid retrieval and provenance-aware code chunks.
 
-8. Build the Code Knowledge Index
+# 8. Build the Code Knowledge Index
 
 After extracting meaningful chunks, calculate embeddings.
 
 A simplified pipeline becomes:
 
-Plain Text
 Source Repository
 │
 ▼
@@ -257,20 +251,18 @@ Vector Database
 
 Possible storage options include:
 
-Plain Text
 PostgreSQL + pgvector
 Vector database
 Local embedded vector store
 
 For enterprise applications already using PostgreSQL infrastructure, pgvector can be convenient.
 
-9. Vector Search Alone Is Not Enough
+# 9. Vector Search Alone Is Not Enough
 
 Code contains very specific identifiers.
 
 For example:
 
-Plain Text
 CustomerId
 SiteId
 FrmPrintOrEmail
@@ -284,12 +276,10 @@ Vector search is useful for conceptual questions such as:
 
 But exact search works better when a ticket contains:
 
-Plain Text
 UpdateTenant()
 
 Therefore use hybrid search:
 
-Plain Text
 User Question
 │
 ├─────────────┐
@@ -311,13 +301,13 @@ Chunks
 
 The internal AI-AugmentedSDLC also describes a hybrid vector and full-text search architecture.
 
-10. The Local LLM Layer
+# 10. The Local LLM Layer
 
 The selected coding LLM is served locally.
 
 Conceptually:
 
-Plain Text
+
 Developer
 ↓
 AI Agent
@@ -332,7 +322,7 @@ Another internal discussion describes Microsoft Phi-4 being used locally through
 
 These should be treated as candidate approaches, not automatically as the best model for every repository.
 
-11. The Agent Layer
+# 11. The Agent Layer
 
 The model alone should not control the entire workflow.
 
@@ -342,7 +332,6 @@ The agent is responsible for deciding what information the model needs.
 
 For example:
 
-Plain Text
 Bug
 │
 ▼
@@ -367,12 +356,11 @@ LLM
 
 This fundamentally changes the interaction from:
 
-Plain Text
 LLM, read my repository and find the problem.
 
 to:
 
-Plain Text
+Plain 
 Agent:
 I found the 8 most relevant pieces
 of code and their relationships.
@@ -383,7 +371,7 @@ the likely cause.
 
 That distinction is critical for cost and context management.
 
-12. Example Defect Investigation
+# 12. Example Defect Investigation
 
 Imagine a ticket:
 
@@ -392,7 +380,6 @@ Customer's Site ID is not updated correctly after saving.
 The agent receives the ticket.
 
 Step 1: Extract key concepts
-Plain Text
 Site ID
 customer
 save
@@ -400,8 +387,6 @@ update
 Step 2: Search repository
 
 Hybrid retrieval finds candidate methods such as:
-
-Plain Text
 SaveCustomer()
 UpdateSite()
 CustomerRepository.Save()
@@ -587,7 +572,6 @@ Not every defect should automatically reach an expensive frontier model.
 
 Introduce a routing mechanism.
 
-Plain Text
 Ticket
 │
 ▼
@@ -624,7 +608,6 @@ This is a suggested design approach. The appropriate routing policy should be de
 
 Without local retrieval:
 
-Plain Text
 Large Repository
 ↓
 Large Prompt
@@ -635,7 +618,6 @@ Large Token Usage
 
 With the proposed architecture:
 
-Plain Text
 Large Repository
 ↓
 Local Index
